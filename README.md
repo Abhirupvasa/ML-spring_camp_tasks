@@ -34,3 +34,16 @@ The data is split into training and test sets using train_test_split from scikit
 Evaluation:
 Predictions are evaluated using the Mean Squared Error and R² Score for both parameters.
 
+Results (When trained on the first 1000 instances of the train data and tested on the first 200 instances of the test data):
+  Mean squared error of factor is: 0.00021993800002884903
+  R2 score of factor is: 0.420062062295264
+  Mean squared error of pppf is: 0.011232736030531534
+  R2 score of pppf is: 0.34243879917283404
+
+Plot 1:(Predicted vs Actual values of the parameter : Infinite Multiplication Factor(M))
+  <img width="392" alt="plot_for_R" src="https://github.com/user-attachments/assets/59798d89-68f1-48b9-bb5a-26005217c4f7" />
+Plot 2:(Predicted vs Actual values of the parameter : Pin Power Peaking Factor (PPPF))
+  <img width="389" alt="plot_for_PPPF" src="https://github.com/user-attachments/assets/62ec6d7c-c0a3-4f4f-b4d7-9519d4b2f765" />
+
+
+
