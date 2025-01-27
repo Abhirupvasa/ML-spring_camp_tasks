@@ -1,0 +1,65 @@
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.multioutput import MultiOutputRegressor
+import matplotlib.pyplot as plt
+
+# Load the trian dataset
+df = pd.read_csv('raw.csv', delim_whitespace=True)
+
+# Splitting the data into features and target
+Y_train = df.iloc[:1000, :2]  # Target: first two columns
+X_train = df.iloc[:1000, 2:]   # Features: all columns after the first two
+
+#Load the test dataset
+dfout = pd.read_csv('test.csv', delim_whitespace=True)
+
+Y_test = dfout.iloc[:200,:2]
+X_test = dfout.iloc[:200,2:]
+
+# Scaling the features
+X_train_scaled = StandardScaler().fit_transform(X_train)
+X_test_scaled = StandardScaler().fit_transform(X_test)
+
+# Training the model
+model = MultiOutputRegressor(RandomForestRegressor(n_estimators=100, random_state=42))
+model.fit(X_train_scaled, Y_train)
+
+# Predictions
+Y_pred = model.predict(X_test_scaled)
+
+# Accessing columns using .iloc for pandas DataFrames
+mse_factor = mean_squared_error(Y_test.iloc[:, 0], Y_pred[:, 0])
+r2score_factor = r2_score(Y_test.iloc[:, 0], Y_pred[:, 0])
+
+mse_pppf = mean_squared_error(Y_test.iloc[:, 1], Y_pred[:, 1])
+r2score_pppf = r2_score(Y_test.iloc[:, 1], Y_pred[:, 1])
+
+# Printing metrics
+print("Mean squared error of factor is:", mse_factor)
+print("R2 score of factor is:", r2score_factor)
+print("Mean squared error of pppf is:", mse_pppf)
+print("R2 score of pppf is:", r2score_pppf)
+
+# Create a scatter plot to compare actual vs predicted R values
+plt.figure()
+plt.scatter(Y_test.iloc[:,0], Y_pred[:,0], color='blue', alpha=0.6)
+# Plot a reference line where actual values equal predicted values (y=x)
+plt.plot([Y_test.iloc[:,0].min(), Y_test.iloc[:,0].max()], [Y_test.iloc[:,0].min(), Y_test.iloc[:,0].max()], color='red', linestyle='--')
+plt.title('Actual vs Predicted Values') 
+plt.xlabel('Actual infinite multiplication factor')
+plt.ylabel('Predicted infinite multiplication factor')
+plt.grid()
+plt.show()
+
+# Create a scatter plot to compare actual vs predicted PPPF values
+plt.figure()
+plt.scatter(Y_test.iloc[:,1], Y_pred[:,1], color='red', alpha=0.6)
+plt.plot([Y_test.iloc[:,1].min(), Y_test.iloc[:,1].max()], [Y_test.iloc[:,1].min(), Y_test.iloc[:,1].max()], color='blue', linestyle='--')
+plt.title('Actual vs Predicted Values') 
+plt.xlabel('Actual PPPF')
+plt.ylabel('Predicted PPPF')
+plt.grid()
+plt.show()
+
